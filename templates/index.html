@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+
+<head>
+    <title>curriculumvit.ai</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static',filename='favicon.ico') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/style.css') }}">
+
+    <script type="module" src="https://md-block.verou.me/md-block.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+</head>
+
+<body>
+    <section>
+        <h1><b><i>curriculum</i></b>vit.ai</h1>
+        <h5>an AI-powered CV analyzer</h5>
+    </section>
+    <section style="padding: 5px 5px 5px 15px;">
+        <md-block>
+            Studies by Jobscan and Harvard Business School indicate that over 90% of large companies use technology such as an Applicant Tracking System (ATS) to review, filter, and rank candidates based on skills, experience, and other pre-set criteria. Industry statistics show that less than 25% of résumés pass these automated systems. Many viable candidates may get filtered out because they do not match the criteria the recruiter is seeking. As a result, University Career Centers recommend [ATS-friendly formatting](https://capd.mit.edu/resources/make-your-resume-ats-friendly/) and tailoring résumés to each job. While formatting tips are easily communicated and achievable, students find it harder to understand how to ensure that their qualifications are highlighted to fit the job. <b><i>curriculum</i></b>vit.ai is free AI-powered platform for use by Career Center professionals as well as students to:
+
+            1. Analyze the job descriptions for the employer’s criteria and examine specific verbiage used.
+            2. Review a résumé and look for matching skills and criteria in context.
+            3. Provide a match score and tangible recommendations for improvement to identify missing skills that a student may have forgotten or need to further develop.
+
+            No personal data is collected or stored by this tool.
+        </md-block>
+        <img width="50px" src="https://i.gifer.com/ZKZg.gif"
+            style="display:none;position:fixed;left:50%;top:50%; text-align: center;" id="loading">
+        <div class="center">
+            <form action=/upload method="post" enctype=multipart/form-data>
+                <label for="file">
+                    <h4>Upload Résumé/CV as PDF:</h4>
+                </label><br>
+
+                <input class="form-control" type="file" name="file" id="file" accept="application/pdf">
+                {{ recaptcha }}
+                <button onclick="document.getElementById('loading').style.display = 'inline'"
+                    class="op btn btn-primary">Upload</button>
+                <script>
+                    const uploadField = document.getElementById("file");
+
+                    uploadField.onchange = function () {
+                        if (this.files[0].size > 2097152) {
+                            alert("File is too big! Max 2MB");
+                            this.value = "";
+                        }
+                    };
+                </script>
+            </form>
+        </div>
+
+        <b style="color:green!important">{{data.filename}}</b><br><b style="color:red!important">{{ data.captcha1 }}</b><br><br>
+
+        
+
+        <form action="/response" method="post">
+            <label for="desc">
+                <h4>Job Description or URL:</h4>
+                <p>Copy text from a job description into the following field or copy the URL for a job posting. URLs must include the http://.... header. The resulting description will be fetched from the URL.</p>
+            </label><br>
+            <input type="text" value="{{data.filename}}" id="fname" name="fname" style="display: none;">
+            <textarea id="textcnt" name="textcnt" type="text" style="display: none;">{{data.resume}}</textarea>
+            <textarea type="text" id="desc" name="desc" rows="4" cols="20" style="min-width: 100%"
+                placeholder="Copy URL or job description here">{{data.desc}}</textarea><br>
+                {{ recaptcha }}
+            <button onclick="document.getElementById('loading').style.display = 'inline'" type="submit"
+                class="btn btn-primary">Submit</button><br><b style="color:red!important">{{ data.captcha2 }}</b><br>
+
+        </form>
+
+        <h4>Match Score and Feedback:</h4>
+        <md-block>
+            {{data.resp}}
+        </md-block>
+    </section>
+    <br>
+    <div id="footer">
+        <div class="navbar">
+            <center style="color:white;">
+                Copyright (C) 2024-25 <a href="http://arvind.seshan.org/">Arvind Seshan</a>. Powered by Gemini.
+                Assistance from <a href="http://sanjay.seshan.org/">Sanjay Seshan</a>.
+            </center>
+        </div>
+    </div>
+
+</body>
